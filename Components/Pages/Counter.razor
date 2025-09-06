@@ -1,0 +1,140 @@
+﻿@page "/counter"
+@rendermode InteractiveServer
+@using System.Timers
+
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter Game</h1>
+<p>This is a simple game to test how fast you click!</p>
+
+<p role="status">Current count: @currentCount</p>
+<p>Time remaining: @_Time</p>
+
+<button class="btn btn-danger" @onclick="Start"> Start Game</button>
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<Modal @ref="modal" Title="Your results">
+    <BodyTemplate>
+        Your Total Clicks: @currentCount
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
+
+
+
+@code {
+
+    private System.Timers.Timer? gameTimer ;
+    private int currentCount = 0;
+    private int _secondsToRun= 10;
+    private bool gameRunning = false;
+
+    private Modal? modal;
+
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
+        currentCount = 0;
+    }
+
+    
+
+
+
+
+
+
+    protected string _Time { get; set; } = "00:00";
+
+
+
+    public EventCallback TimerOut{ get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        gameTimer = new System.Timers.Timer(1000);
+        gameTimer.Elapsed += onTimedEvent;
+        gameTimer.AutoReset = true;
+    }
+
+
+    public void Start()
+    {
+
+        if (!gameRunning)
+        {
+            _secondsToRun = 10;
+            currentCount = 0;
+            _Time = TimeSpan.FromSeconds(_secondsToRun).ToString(@"mm\:ss");
+            gameRunning = true;
+            StateHasChanged();
+            gameTimer?.Start();
+        }
+
+
+
+
+    }
+
+    public void Stop()
+    {
+        gameRunning = false;
+        gameTimer?.Stop();
+        StateHasChanged();
+    }
+
+
+
+    private async void onTimedEvent(object? source, ElapsedEventArgs e)
+    {
+        _secondsToRun--;
+        await InvokeAsync(() =>
+        {
+            _Time = TimeSpan.FromSeconds(_secondsToRun).ToString(@"mm\:ss");
+            StateHasChanged();
+
+        });
+
+        if(_secondsToRun <= 0)
+        {
+            modal?.ShowAsync();
+            gameTimer?.Stop();
+            gameRunning = false;
+            await InvokeAsync(() => Stop());
+        }
+    }
+
+
+    private void IncrementCount()
+    {
+        
+        currentCount++;
+
+       
+           
+       
+    }
+
+
+    
+ 
+   
+
+
+    
+
+    
+
+  
+
+
+    
+
+
+   
+}

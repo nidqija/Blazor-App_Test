@@ -1,0 +1,72 @@
+﻿@page "/stocks"
+@using System
+@using System.Collections.Generic
+@using System.Net
+@using System.Text.Json
+@inject HttpClient Http
+
+
+
+<h3>Stocks Index Viewer</h3>
+
+@code {
+	private List<IbmStock> ibmData = new();
+	private bool loading = true;
+	private string? errorMessage;
+	private string apiKey = "demo";
+
+	private string keyString = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo";
+	private async Task loadIBMData()
+	{
+		try
+		{
+			loading = true;
+			errorMessage = null;
+			var url = $"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey={apiKey}";
+			var response = await Http.GetFromJsonAsync<Dictionary<string , object>>(url);
+
+			if (response != null && response.ContainsKey("Time Series (5min)"))
+			{
+				var raw = response["Time Series (5min)"].ToString();
+
+				if(raw != null)
+				{
+					var TimeSeries = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(response["Time Series (5min)"].ToString()?? "");
+					foreach (var item in TimeSeries!)
+					{
+						ibmData.Add(new IbmStock
+						{
+                           Timestamp = item.Key,
+						   Open = item.Value["1.open"],
+						   High = item.Value["2.high"],
+
+
+						});
+					}
+
+				}
+			}
+		}
+
+		finally
+		{
+			
+		}
+
+	}
+
+
+
+
+	public class IbmStock
+	{
+		public string Timestamp { get; set; }
+		public string Open { get; set; }
+		public string High { get; set; }
+		public string Low { get; set; }
+		public string Close { get; set; }
+		public string Volume { get; set; }
+
+
+	}
+}
