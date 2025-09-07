@@ -43,3 +43,4 @@ C:\Users\User\source\repos\MyTestBlazor_1\MyTestBlazor_1\bin\Debug\net8.0\Micros
 C:\Users\User\source\repos\MyTestBlazor_1\MyTestBlazor_1\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
 C:\Users\User\source\repos\MyTestBlazor_1\MyTestBlazor_1\bin\Debug\net8.0\Microsoft.JSInterop.dll
 C:\Users\User\source\repos\MyTestBlazor_1\MyTestBlazor_1\obj\Debug\net8.0\MyTestBl.7B94E41F.Up2Date
+C:\Users\User\source\repos\MyTestBlazor_1\MyTestBlazor_1\obj\Debug\net8.0\MyTestBlazor_1.sourcelink.json

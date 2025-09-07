@@ -6,6 +6,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddHttpClient();
+
+
+builder.Services.AddHttpClient("AlphaVantage", client =>
+{
+    client.BaseAddress = new Uri("https://www.alphavantage.co/");
+});
+
 
 var app = builder.Build();
 
@@ -21,6 +29,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
